@@ -4,7 +4,7 @@ from PIL import Image
 from pillow_heif import register_heif_opener
 from psd_tools import PSDImage
 from classifier import classify, classify_folder, ANIMAL_PROMPT
-from file_manager import move_file_to_folder
+from image_sorter_main import move_file_to_folder
 from labels import labels, folder_labels
 import time
 register_heif_opener()

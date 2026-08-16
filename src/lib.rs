@@ -12,3 +12,8 @@ pub fn move_file_to_folder(file_path: &str, folder_name: &str) -> PyResult<()> {
     fs::rename(file_path, destination).expect("Failed to move file");
     Ok(())
 }
+#[pymodule]
+fn image_sorter_main(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(move_file_to_folder, m)?)?;
+    Ok(())
+}
