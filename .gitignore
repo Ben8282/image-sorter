@@ -1,0 +1,23 @@
+/target
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# AI models
+models/
+
+# Rust
+target/
+
+# IDE
+.vscode/
+.idea/
+
+# Environment / secrets
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db

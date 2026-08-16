@@ -1,8 +1,3 @@
-#Copyright 2026 Ben Chorev
-#
-#This Source Code Form is subject to the terms of the Mozilla Public
-#License, v. 2.0. If a copy of the MPL was not distributed with this
-#file, You can obtain one at https://mozilla.org/MPL/2.0/.
 import pathlib
 import rawpy
 from PIL import Image
@@ -10,7 +5,7 @@ from pillow_heif import register_heif_opener
 from psd_tools import PSDImage
 from classifier import classify, classify_folder, ANIMAL_PROMPT
 from file_manager import move_file_to_folder
-from labels import labels, animal_labels, folder_labels
+from labels import labels, folder_labels
 import time
 register_heif_opener()
 print("welcome to the image sorter")
@@ -25,6 +20,7 @@ while True:
     folder = pathlib.Path(folder)
     if not folder.exists():
         print("please make sure you put a real folder in")
+        continue
     else:
         print("folder found")
         files = [file for file in folder.iterdir() if file.is_file()]

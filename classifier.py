@@ -50,12 +50,12 @@ for dtype in dtypes:
 
         print(f"Using {dtype}")
         break
-
-    except Exception:
-        print(f"{dtype} is not supported.")
-
+    except Exception as e:
+        print(f"{dtype} failed:")
+        print(e)
 else:
     raise RuntimeError("Could not load Qwen model with any supported precision.")
+
 ANIMAL_PROMPT = """
 You are an AI image classifier whose ONLY job is to generate the canonical folder name for an image sorter.
 

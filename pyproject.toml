@@ -1,0 +1,27 @@
+[project]
+name = "image-sorter-main"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Ben8282", email = "benchorev@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "accelerate>=1.14.0",
+    "huggingface-hub>=1.27.0",
+    "open-clip-torch>=3.3.0",
+    "pillow>=12.3.0",
+    "pillow-heif>=1.5.0",
+    "psd-tools>=1.18.0",
+    "rawpy>=0.27.0",
+    "torch>=2.13.0",
+    "transformers>=5.15.0",
+]
+
+[project.scripts]
+image-sorter-main = "image_sorter_main:main"
+
+[build-system]
+requires = ["uv_build>=0.12.2,<0.13.0"]
+build-backend = "uv_build"

@@ -29,7 +29,6 @@ The faster your hardware, the faster the program will run.
 - open-clip-torch
 - transformers
 - huggingface-hub
-- accelerate
 
 ---
 
