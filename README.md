@@ -12,6 +12,8 @@ If an image is classified as an animal, it is passed to a Vision Language Model 
 
 Both AI models run completely locally after the initial model download. No cloud API is used.
 
+File moving is handled by a Rust extension using PyO3.
+
 Keep in mind that AI models are not perfect, so some images may be classified incorrectly.
 
 The faster your hardware, the faster the program will run.
@@ -20,7 +22,10 @@ The faster your hardware, the faster the program will run.
 
 ## Dependencies
 
-- Python
+- Python 3.12+
+- Rust
+- uv
+- PyO3
 - Pillow
 - pillow-heif
 - psd-tools
@@ -29,23 +34,99 @@ The faster your hardware, the faster the program will run.
 - open-clip-torch
 - transformers
 - huggingface-hub
+- accelerate
+
+---
+
+## Installation
+
+### 1. Install Rust
+
+Rust is required because part of the program is written in Rust.
+
+Download and install Rust using the official Rust installation instructions:
+
+https://www.rust-lang.org/tools/install
+
+### 2. Install uv
+
+uv is used to manage the Python environment and dependencies.
+
+Follow the official installation instructions:
+
+https://docs.astral.sh/uv/getting-started/installation/
+
+### 3. Clone the repository
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Ben8282/image-sorter.git
+```
+
+Then enter the project directory:
+
+```bash
+cd image-sorter
+```
+
+### 4. Install the Python dependencies
+
+Run:
+
+```bash
+uv sync
+```
+
+### 5. Build the Rust code
+
+Run:
+
+```bash
+cargo build --release
+```
+
+### 6. Run the program
+
+Run:
+
+```bash
+uv run python main.py
+```
+
+The first time the program runs, the required AI models will be downloaded automatically.
+
+The Qwen2.5-VL model is several gigabytes in size, so the first run can take a while.
 
 ---
 
 ## Running the Program
 
-1. Download or clone the source code.
-2. Install the required dependencies.
-3. Run:
+Start the program with:
 
 ```bash
-python main.py
+uv run python main.py
 ```
 
-4. When prompted, enter the path to the folder containing your unsorted images.
+The program will ask for the folder containing your unsorted images.
 
-If the image folder is in the same directory as the program, you can simply enter its name.
+Enter the path to that folder.
 
+For example:
+
+```text
+/home/user/Pictures/unsorted
+```
+
+Or, if the folder is in the same directory as the program:
+
+```text
+unsorted
+```
+
+The program will then process the images and move them into the appropriate folders.
+
+---
 
 ## Supported Formats
 
@@ -79,3 +160,67 @@ RAW camera formats (via rawpy/LibRaw), including many manufacturers such as:
 - Leica (.rwl)
 - DNG (.dng)
 - And many other RAW formats supported by LibRaw.
+
+---
+
+## Project Structure
+
+```text
+image-sorter/
+├── main.py
+├── classifier.py
+├── labels.py
+├── pyproject.toml
+├── uv.lock
+├── Cargo.toml
+├── Cargo.lock
+├── src/
+│   └── lib.rs
+├── .gitignore
+├── .python-version
+├── LICENSE
+└── README.md
+```
+
+### Python
+
+`main.py` contains the main image-sorting program.
+
+`classifier.py` contains the OpenCLIP and Qwen2.5-VL classification code.
+
+`labels.py` contains the classification labels and folder names.
+
+### Rust
+
+`src/lib.rs` contains the Rust code used for moving files.
+
+PyO3 is used to expose the Rust file-moving function to Python.
+
+---
+
+## AI Models
+
+The project uses:
+
+- OpenCLIP for the initial image classification.
+- Qwen2.5-VL for detailed animal classification.
+
+The models are downloaded automatically when they are first needed.
+
+The models are not included in this repository.
+
+---
+
+## Hardware
+
+The program can run on CPU or use available GPU acceleration through PyTorch.
+
+Performance depends on the hardware and PyTorch backend available on the system.
+
+The first model download can require several gigabytes of storage.
+
+---
+
+## License
+
+This project is licensed under the Mozilla Public License 2.0.
