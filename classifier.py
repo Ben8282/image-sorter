@@ -5,13 +5,110 @@ from labels import labels, folder_labels
 from pathlib import Path
 from huggingface_hub import snapshot_download
 
-model, _, preprocess = open_clip.create_model_and_transforms(
-    "ViT-B-32",
-    pretrained="laion2b_s34b_b79k",
-    
-)
+AI_MODELS = {
+    "tiny": {
+        "name": "ViT-B/32",
+        "backend": "open_clip",
+        "parameters": "151M",
+        "accuracy": "56.2%",
+        "minimum": "CPU, 4 GB RAM",
+        "recommended": "2 GB VRAM, 8 GB RAM",
+        "description": "Fastest option for low-end hardware.",
+    },
 
-tokenizer = open_clip.get_tokenizer("ViT-B-32")
+    "small": {
+        "name": "ViT-B/16 DataComp",
+        "backend": "open_clip",
+        "parameters": "149M",
+        "accuracy": "73.5%",
+        "minimum": "CPU, 8 GB RAM",
+        "recommended": "4 GB VRAM, 8 GB RAM",
+        "description": "Fast with much better accuracy.",
+    },
+
+    "recommended": {
+        "name": "DFN ViT-L/14",
+        "backend": "open_clip",
+        "parameters": "428M",
+        "accuracy": "82.2%",
+        "minimum": "4 GB VRAM, 16 GB RAM",
+        "recommended": "8 GB VRAM, 16 GB RAM",
+        "description": "Best balance of speed and accuracy.",
+    },
+
+    "high": {
+        "name": "SigLIP2 SO400M/16-384",
+        "backend": "open_clip",
+        "parameters": "900M",
+        "accuracy": "84.1%",
+        "minimum": "6 GB VRAM, 16 GB RAM",
+        "recommended": "12 GB VRAM, 32 GB RAM",
+        "description": "High accuracy for powerful hardware.",
+    },
+
+    "maximum": {
+        "name": "PE-Core-bigG/14-448",
+        "backend": "open_clip",
+        "parameters": "1.8B",
+        "accuracy": "85.4%",
+        "minimum": "12 GB VRAM, 32 GB RAM",
+        "recommended": "24 GB VRAM, 64 GB RAM",
+        "description": "Maximum accuracy for high-end hardware.",
+    },
+}
+CLIP_MODELS = {
+    "tiny": {
+        "model": "ViT-B-32",
+        "pretrained": "laion2b_s34b_b79k",
+    },
+
+    "small": {
+        "model": "ViT-B-16",
+        "pretrained": "datacomp_l_s1b_b8k",
+    },
+
+    "recommended": {
+        "model": "hf-hub:apple/DFN2B-CLIP-ViT-L-14",
+        "pretrained": None,
+    },
+
+    "high": {
+        "model": "hf-hub:timm/ViT-SO400M-16-SigLIP2-384",
+        "pretrained": None,
+    },
+
+    "maximum": {
+        "model": "hf-hub:timm/PE-Core-bigG-14-448",
+        "pretrained": None,
+    },
+}
+
+def load_clip_model(model_id):
+    config = CLIP_MODELS[model_id]
+
+    if config["pretrained"] is None:
+        model, _, preprocess = open_clip.create_model_and_transforms(
+            config["model"],
+        )
+    else:
+        model, _, preprocess = open_clip.create_model_and_transforms(
+            config["model"],
+            pretrained=config["pretrained"],
+        )
+
+    tokenizer = open_clip.get_tokenizer(config["model"])
+
+    return model, preprocess, tokenizer
+
+
+model = None
+preprocess = None
+tokenizer = None
+
+
+def set_clip_model(model_id):
+    global model, preprocess, tokenizer
+    model, preprocess, tokenizer = load_clip_model(model_id)
 
 MODEL_PATH = Path(__file__).parent / "models" / "Qwen2.5-VL-3B-Instruct"
 

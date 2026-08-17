@@ -9,7 +9,7 @@ import rawpy
 from PIL import Image
 from pillow_heif import register_heif_opener
 from psd_tools import PSDImage
-from classifier import classify, classify_folder, ANIMAL_PROMPT
+from classifier import classify, classify_folder, ANIMAL_PROMPT, AI_MODELS, set_clip_model
 from image_sorter_main import move_file_to_folder
 from labels import labels, folder_labels
 import time
@@ -28,12 +28,34 @@ while True:
         print("please make sure you put a real folder in")
         continue
     else:
+        print("\nChoose an AI model:\n")
+
+        for number, (model_id, info) in enumerate(AI_MODELS.items(), 1):
+            print(f"{number}. {info['name']}")
+            print(f"   Parameters: {info['parameters']}")
+            print(f"   Accuracy: {info['accuracy']}")
+            print(f"   Minimum: {info['minimum']}")
+            print(f"   Recommended: {info['recommended']}")
+            print(f"   {info['description']}")
+            print()
+
+        while True:
+            choice = input("Choose a model (1-5): ").strip()
+            if choice in {"1", "2", "3", "4", "5"}:
+                break
+
+            print("Please enter a number from 1 to 5.")
+
+        model_id = list(AI_MODELS.keys())[int(choice) - 1]
+
+        print(f"\nLoading {AI_MODELS[model_id]['name']}...")
+        set_clip_model(model_id)
         print("folder found")
         files = [file for file in folder.iterdir() if file.is_file()]
         total_files = len(files)
         current_file = 0
         
-        for file in folder.iterdir():
+        for file in files:
             current_file += 1
             print(f"[{current_file}/{total_files}] {file.name}")
             if not file.is_file():
@@ -74,12 +96,12 @@ while True:
 
                     move_file_to_folder(
                     file,
-                    f"animal/{animal_prediction}"
+                    folder / "animal" / animal_prediction
                     )
 
                     continue
                 else:
-                    move_file_to_folder(file, prediction)
+                    move_file_to_folder(file, folder / prediction)
     elapsed = time.perf_counter() - start_time
 
     print("\n========== Summary ==========")

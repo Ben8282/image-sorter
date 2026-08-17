@@ -13,6 +13,7 @@ labels = [
     "a photograph of a toy",
     "a photograph of clothing",
     "a painting, drawing, illustration, sculpture, or digital artwork",
+    "a screenshot of a computer program, app, website, video game, chat, or empty dark mode window on a screen",
 ]
 
 folder_labels = [
@@ -29,4 +30,5 @@ folder_labels = [
     "toy",
     "clothing",
     "art",
+    "screenshot",
 ]

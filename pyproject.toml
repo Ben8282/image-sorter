@@ -19,5 +19,12 @@ dependencies = [
     "transformers>=5.15.0",
 ]
 [build-system]
-requires = ["uv_build>=0.12.2,<0.13.0"]
-build-backend = "uv_build"
+requires = ["maturin>=1.7,<2.0"]
+build-backend = "maturin"
+
+[tool.maturin]
+module-name = "image_sorter_main"
+
+[tool.uv]
+# Rebuild the Rust extension when its sources change, not just pyproject.toml
+cache-keys = [{ file = "pyproject.toml" }, { file = "Cargo.toml" }, { file = "src/**/*.rs" }]
